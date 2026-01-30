@@ -1,0 +1,33 @@
+package com.crm.modal;
+
+import java.time.LocalDateTime;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class ChatModal {
+    
+   private Long id;
+    private String sender;
+    private String message;
+    private String senderName;
+    private LocalDateTime createdAt;
+
+    
+private String fileName;
+
+private String remark;
+
+private String fileUrl;
+
+private String fileType; // IMAGE / PDF / DOC
+
+
+
+private Long ticket_id;
+
+}
