@@ -13,7 +13,7 @@ public class WebConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**") // सभी endpoints
-                        .allowedOrigins("https://gargwebinfotech.co.in") // frontend URL
+                        .allowedOrigins("https://697cb383ca202b290aabc12d--bright-baklava-4bd400.netlify.app") // frontend URL
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowCredentials(true);
             }
