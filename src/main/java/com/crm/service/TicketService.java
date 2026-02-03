@@ -54,18 +54,18 @@ public class TicketService {
         ticketEntity.setProject(taskEntity);
         ticketRepo.save(ticketEntity);
 
-        List<Long> empIds = service.getSupportAsign(projectId, customerId);
+        List<Long> empIds = service.getProjectEmployees(projectId);
         if (!empIds.isEmpty()) {
             service.asignTicket(customerId, ticketEntity.getId(), empIds);
         }
 
         // 3️⃣ Add system chat
         chatService.addChat("Our team will contact you in 10 minutes",
-         null, projectId, "SYSTEM");
+         null, ticketEntity.getId(), "SYSTEM");
 
 
-        
- return ResponseEntity.ok(ticketEntity);
+
+        return ResponseEntity.ok(Collections.singletonMap("id", ticketEntity.getId()));
    
     }
 

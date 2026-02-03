@@ -89,4 +89,14 @@ public class CustomerService {
     return modals;
 
     }
+
+    public ResponseEntity<?> changeStatus(Long customerId,String status){
+
+        CustomerEntity customerEntity=customerRepo.findById(customerId).orElseThrow(() ->  new RuntimeException("customer not found"));
+
+        customerEntity.setStutes(status);
+
+        customerRepo.save(customerEntity);
+        return ResponseEntity.ok("status updated successs");
+    }
 }

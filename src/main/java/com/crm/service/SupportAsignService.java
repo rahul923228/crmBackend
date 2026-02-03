@@ -3,34 +3,29 @@ package com.crm.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.crm.entity.SupportAsingEntity;
+import com.crm.entity.*;
 import com.crm.modal.SupportAsignModal;
-import com.crm.repo.SupportAsignRepo;
+import com.crm.repo.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import com.crm.entity.EmpBasicEntity;
-import com.crm.repo.EmpBasicRepo;
-import com.crm.entity.CustomerEntity;
-import com.crm.repo.CustomerRepo;
-import com.crm.entity.TicketEntity;
-import com.crm.repo.TicketRepo;
 
 @Service
 public class SupportAsignService {
     
 
     SupportAsignRepo repo;
-    TicketRepo ticketRepo;
+    TaskAsignRepo taskAsignRepo;
     EmpBasicRepo basicRepo;
     CustomerRepo customerRepo;
+    TicketRepo ticketRepo;
 
-    public SupportAsignService(EmpBasicRepo basicRepo, SupportAsignRepo repo, TicketRepo ticketRepo,CustomerRepo customerRepo) {
+    public SupportAsignService(EmpBasicRepo basicRepo,TicketRepo ticketRepo, SupportAsignRepo repo, TaskAsignRepo taskAsignRepo,CustomerRepo customerRepo) {
         this.basicRepo = basicRepo;
         this.repo = repo;
-        this.ticketRepo = ticketRepo;
+        this.taskAsignRepo=taskAsignRepo;
         this.customerRepo=customerRepo;
+        this.ticketRepo=ticketRepo;
     }
 
    
@@ -79,33 +74,20 @@ public class SupportAsignService {
 }
 
 
-    public List<Long> getSupportAsign(
-        Long ticketId,
-        Long customerId
-) {
+    public List<Long> getProjectEmployees(Long projectId) {
 
-    TicketEntity ticket =
-        ticketRepo.findById(ticketId)
-        .orElseThrow(() -> new RuntimeException("Ticket not found"));
+        List<TaskAsignEntity> assignments = taskAsignRepo.findByTaskEntity_Id(projectId);
 
-    // 🔒 Ownership check
-    if (!ticket.getCustomer().getId().equals(customerId)) {
-        throw new RuntimeException("Ticket does not belong to this customer");
+        List<Long> empIds = new ArrayList<>();
+
+
+        for (TaskAsignEntity asgn : assignments) {
+            if (asgn.getBasicEntity() != null) {
+                empIds.add(asgn.getBasicEntity().getId());
+            }
+        }
+        return empIds;
     }
-
-    List<Long> empIds = new ArrayList<>();
-
-    for (SupportAsingEntity entity : ticket.getAsignTicketList()) {
-
-       
-        Long id=entity.getBasicEntity().getId();
-       
-
-        empIds.add(id);
-    }
-
-    return empIds;
-}
 
 
  public List<SupportAsignModal> getSupportA(

@@ -96,17 +96,16 @@ public class AddEmployeeService {
 
     public EmployeeCreateRequest getEmployeeById(Long id) {
 
-       UserEntity userEntity=userRepo.findById(id).orElseThrow(() -> new RuntimeException("user not found"));
+     //  UserEntity userEntity=userRepo.findById(id).orElseThrow(() -> new RuntimeException("user not found"));
 
-    EmpBasicEntity basicEntity =basicRepo.findByUser_Id(userEntity.getId()).orElseThrow(() -> new RuntimeException("basic not found"));
-            
+    EmpBasicEntity basicEntity =basicRepo.findById(id).orElseThrow(() -> new RuntimeException("basic not found")) ;
 
                    
 
 
 
-    EmpFamilyEntity familyEntity = familyRepo.findByBasic_Id(id);
-    EmpWorkEntity workEntity = workRepo.findByBasic_Id(id);
+    EmpFamilyEntity familyEntity = familyRepo.findByBasic_Id(basicEntity.getId());
+    EmpWorkEntity workEntity = workRepo.findByBasic_Id(basicEntity.getId());
 
     
     EmployeeCreateRequest dto = new EmployeeCreateRequest();
@@ -120,7 +119,7 @@ public class AddEmployeeService {
     if (familyEntity != null) {
         EmpFamilyModal familyModal = new EmpFamilyModal();
         BeanUtils.copyProperties(familyEntity, familyModal);
-        familyModal.setBasicId(id);
+        familyModal.setBasicId(basicEntity.getId());
         dto.setFamily(familyModal);
     }
 
@@ -136,7 +135,7 @@ public class AddEmployeeService {
         
 
        // workEntity.setDepartmentName(dEntity);
-        workModal.setBasicId(id);
+        workModal.setBasicId(basicEntity.getId());
 
         dto.setWork(workModal);
     }
@@ -196,10 +195,11 @@ public class AddEmployeeService {
 
         entity.setDepartmentName(dto.getWork().getDepartmentName());
         entity.setWorkEntity(work);
+        workRepo.save(work);
        departmentRepo.save(entity);
                              
        
-       workRepo.save(work);
+
 
         return "Employee added successfully";
     }
@@ -207,7 +207,7 @@ public class AddEmployeeService {
     public ResponseEntity<?> updateEmployee(EmployeeCreateRequest request, Long id) {
 
     EmpBasicEntity basicEntity =
-            basicRepo.findByUser_Id(id)
+            basicRepo.findById(id)
                      .orElseThrow(() -> new RuntimeException("Employee not found"));
 
                     

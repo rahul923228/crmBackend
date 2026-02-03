@@ -7,9 +7,13 @@ import org.springframework.stereotype.Repository;
 import com.crm.entity.EmpBasicEntity;
 import com.crm.entity.TaskEntity;
 
+import java.util.List;
+
 @Repository
 public interface TaskAsignRepo extends JpaRepository<TaskAsignEntity, Long>{
 
-    public boolean existsByTaskEntityAndBasicEntity(TaskEntity task, EmpBasicEntity employee);
+     boolean existsByTaskEntityAndBasicEntity(TaskEntity task, EmpBasicEntity employee);
+
+    List<TaskAsignEntity> findByTaskEntity_Id(Long taskId);
     
 }
