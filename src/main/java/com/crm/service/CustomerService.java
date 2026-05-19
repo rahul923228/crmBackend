@@ -32,18 +32,14 @@ public class CustomerService {
 
         UserEntity userEntity=userRepo.findById(id).orElseThrow(() -> new RuntimeException("user not found"));
 
-      
-
-       CustomerEntity entity=new CustomerEntity();
+        CustomerEntity entity=new CustomerEntity();
        
        entity.setUserEntity(userEntity);
 
-        BeanUtils.copyProperties(modal, entity,"user");
+        BeanUtils.copyProperties(modal, entity);
         customerRepo.save(entity);
 
-       
-
-         return ResponseEntity.ok("saved success");
+        return ResponseEntity.ok("saved success");
         
     }
 

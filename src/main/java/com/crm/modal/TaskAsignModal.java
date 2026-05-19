@@ -17,5 +17,7 @@ public class TaskAsignModal {
     Long customer_id;
     String status;
     LocalDate assignedDate;
+    String name;
+    String description;
 
 }

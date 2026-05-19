@@ -37,4 +37,9 @@ public class SupportAsignController {
 
     }
 
+    @GetMapping("/support/get/{empId}")
+    public List<SupportAsignModal> getSupportByEmp(@PathVariable Long empId){
+        return service.getSupportByEmp(empId);
+    }
+
 }

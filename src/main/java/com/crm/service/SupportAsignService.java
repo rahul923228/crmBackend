@@ -124,4 +124,32 @@ public class SupportAsignService {
 
     return listModals;
 }
+
+
+   public List<SupportAsignModal> getSupportByEmp(Long empId){
+
+        List<SupportAsingEntity> list=repo.findByBasicEntity_Id(empId);
+
+        List<SupportAsignModal> modals=new ArrayList<>();
+
+        if (list.isEmpty()){
+            return new ArrayList<>();
+        }
+
+        list.forEach(entity->{
+
+            SupportAsignModal modal=new SupportAsignModal();
+
+            modal.setCustomer_id(entity.getCustomerEntity().getId());
+            modal.setEmp_id(entity.getBasicEntity().getId());
+            modal.setStatus(entity.getStatus());
+            modal.setTicket_id(entity.getTicketEntity().getId());
+            modal.setId(entity.getId());
+
+            modals.add(modal);
+
+        });
+
+        return modals;
+   }
 }

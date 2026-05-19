@@ -1,12 +1,15 @@
 package com.crm.service;
 
 import com.crm.User.*;
+import com.crm.entity.CustomerEntity;
+import com.crm.entity.EmpBasicEntity;
 import com.crm.entity.PasswordEntity;
 import com.crm.entity.UserEntity;
 import com.crm.modal.UserRequest;
 import com.crm.modal.UserResponce;
 import com.crm.repo.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -33,44 +36,54 @@ public class UserService {
         this.customerRepo = customerRepo;
     }
 
-    public UserResponce login(UserRequest userRequest) {
+    public ResponseEntity<?> login(UserRequest userRequest) {
 
-       UserEntity user = userRepo
-            .findByUserName(userRequest.getUserName())
-            .orElseThrow(() -> new RuntimeException("User not found"));
+        UserEntity user = userRepo
+                .findByUserName(userRequest.getUserName())
+                .orElse(null);
 
-    if (!encoder.matches(userRequest.getPassword(), user.getPassword())) {
-        throw new RuntimeException("Invalid password");
-    }
+        // ❌ WRONG → 400
+        // ✅ FIX → 401
+        if (user == null) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body("Invalid username or password");
+        }
 
-    String token = jwtiUtil.genrateToken(user.getUserName());
+        if (!encoder.matches(userRequest.getPassword(), user.getPassword())) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body("Invalid username or password");
+        }
 
-    UserResponce response = new UserResponce();
-    response.setToken(token);
-    response.setRole(user.getRole());
-    response.setUserName(user.getUserName());
-    response.setUserId(user.getId());   // userId ✅
+        String token = jwtiUtil.genrateToken(user.getUserName());
 
-    // 🔑 ROLE BASED ID EXTRACTION
-    if ("CUSTOMER".equals(user.getRole())) {
-        Long customerId = customerRepo
-                .findByUserEntity_Id(user.getId())
-                .orElseThrow(() -> new RuntimeException("Customer not found"))
-                .getId();
+        System.out.println("token???"+token);
 
-        response.setCustomerId(customerId); // 🔥 THIS LINE WAS MISSING
-    }
+        UserResponce response = new UserResponce();
+        response.setToken(token);
+        response.setRole(user.getRole());
+        response.setUserName(user.getUserName());
+        response.setUserId(user.getId());
 
-    if ("EMPLOYEE".equals(user.getRole())) {
-        Long empId = basicRepo.findByUser_Id(user.getId())
-                
-                .orElseThrow(() -> new RuntimeException("employee not found"))
-                .getId();
+        // CUSTOMER
+        if ("CUSTOMER".equals(user.getRole())) {
+            CustomerEntity customerEntity = customerRepo
+                    .findByUserEntity_Id(user.getId())
+                    .orElseThrow(() -> new RuntimeException("Customer not found"));
 
-        response.setEmpId(empId); // 🔥 THIS LINE WAS MISSING
-    }
+            response.setCustomerId(customerEntity.getId());
+        }
 
-    return response;
+        // EMPLOYEE
+        if ("EMPLOYEE".equals(user.getRole())) {
+            EmpBasicEntity empBasicEntity = basicRepo.findByUser_Id(user.getId())
+                    .orElseThrow(() -> new RuntimeException("Employee not found"));
+
+            response.setEmpId(empBasicEntity.getId());
+        }
+
+        return ResponseEntity.ok(response);
     }
 
     public UserResponce register(UserRequest request) {

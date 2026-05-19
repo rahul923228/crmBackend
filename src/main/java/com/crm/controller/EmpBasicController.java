@@ -19,7 +19,6 @@ import com.crm.service.AddEmployeeService;
 
 @RestController
 @RequestMapping("/api/emp")
-@CrossOrigin(origins = "http://localhost:3000")
 public class EmpBasicController {
     
     EmpBasicService service;

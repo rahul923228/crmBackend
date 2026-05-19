@@ -17,8 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.crm.modal.EmpBasicModal;
 
 @RestController
-@RequestMapping("api/emp")
-@CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping("/api/emp")
+
+
 public class AddEmployeeController {
 
     AddEmployeeService service;
@@ -65,8 +66,11 @@ public ResponseEntity<?> updateEmployee(
     @PutMapping("delete/{id}")
     public ResponseEntity<?> deleteEmployee(@RequestBody EmpBasicModal request,@PathVariable Long id){
 
-    
-        return service.deleteEmployee(request, id);
+
+        return service.deleteEmployee(request,id);
     }
+
+
+
 
 }

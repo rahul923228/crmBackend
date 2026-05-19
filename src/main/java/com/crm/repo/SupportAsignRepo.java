@@ -7,8 +7,12 @@ import org.springframework.stereotype.Repository;
 import com.crm.entity.EmpBasicEntity;
 import com.crm.entity.TicketEntity;
 
+import java.util.List;
+
 @Repository
 public interface  SupportAsignRepo extends  JpaRepository<SupportAsingEntity, Long> {
     
     boolean existsByTicketEntityAndBasicEntity(TicketEntity ticketEntity,EmpBasicEntity basicEntity);
+
+    List<SupportAsingEntity> findByBasicEntity_Id(Long empId);
 }

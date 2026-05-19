@@ -2,6 +2,7 @@ package com.crm.controller;
 
 import java.util.List;
 
+import com.crm.entity.TaskAsignEntity;
 import com.crm.modal.TaskAsignModal;
 import com.crm.service.TaskAsignService;
 import org.springframework.http.ResponseEntity;
@@ -32,11 +33,16 @@ public ResponseEntity<?> asigTask(@PathVariable Long taskId,@RequestBody List<Lo
     return ResponseEntity.ok("asing success");
 }
 
-@GetMapping("getAsignTask/{taskId}")
+@GetMapping("/getAsignTask/{taskId}")
 public List<TaskAsignModal> getAsignTask(@PathVariable Long taskId){
 
     return service.getAsignTask(taskId);
 }
+
+@GetMapping("/get/task/{empId}")
+    public List<TaskAsignModal> getAssingTaskByEmpId(@PathVariable Long empId){
+    return service.getAssingTaskByEmpId(empId);
+    }
 
 
 

@@ -76,9 +76,29 @@ public class ChatService {
 
         ChatModal modal=new ChatModal();
 
+        BeanUtils.copyProperties(entity,modal);
+
         System.out.println("msg"+entity.getMessage());
-      BeanUtils.copyProperties(entity, modal,"ticket");
-      modal.setTicket_id(entity.getTicket().getId());
+
+        modal.setId(entity.getId());
+        modal.setCreatedAt(entity.getCreatedAt());
+        modal.setMessage(entity.getMessage());
+
+        modal.setFileUrl(entity.getFileUrl());
+        modal.setFileType(entity.getFileType());
+        modal.setFileName(entity.getFileName());
+
+        modal.setSenderName(entity.getSenderName());
+
+
+          if (entity.getTicket() != null) {
+              modal.setTicket_id(entity.getTicket().getId());
+              modal.setRemark(entity.getTicket().getRemark());
+
+          }
+
+
+
         modalList.add(modal);
 
       });
@@ -105,12 +125,26 @@ public class ChatService {
 
         // file
         if (file != null) {
-            String uploadDir = "C:/crm_uploads/chat/";
-            File dir = new File(uploadDir);
-            if (!dir.exists()) dir.mkdirs();
 
-            String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename().replaceAll("\\s+", "_");
+            String basePath = System.getProperty("user.dir");
+
+            String uploadDir =
+                    basePath + File.separator +
+                            "uploads" + File.separator +
+                            "chat";
+
+            File dir = new File(uploadDir);
+
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+
+            String fileName =
+                    System.currentTimeMillis() + "_" +
+                            file.getOriginalFilename().replaceAll("\\s+", "_");
+
             File serverFile = new File(dir, fileName);
+
             file.transferTo(serverFile);
 
             chat.setFileName(file.getOriginalFilename());
@@ -121,5 +155,21 @@ public class ChatService {
         chatRepo.save(chat);
 
         return ResponseEntity.ok("data add success");
+    }
+
+    public void saveFromSocket(ChatModal msg) {
+
+        ChatEntity entity = new ChatEntity();
+
+        entity.setMessage(msg.getMessage());
+        entity.setSenderName(msg.getSenderName());
+        entity.setCreatedAt(LocalDateTime.now());
+
+        TicketEntity ticket = ticketRepo.findById(msg.getTicket_id())
+                .orElseThrow(() -> new RuntimeException("Ticket not found"));
+
+        entity.setTicket(ticket);
+
+        chatRepo.save(entity);
     }
 }

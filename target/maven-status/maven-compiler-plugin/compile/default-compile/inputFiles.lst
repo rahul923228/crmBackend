@@ -3,6 +3,7 @@ D:\Spring projcts\crm\backend\src\main\java\com\crm\component\JwtUtil.java
 D:\Spring projcts\crm\backend\src\main\java\com\crm\config\FileConfig.java
 D:\Spring projcts\crm\backend\src\main\java\com\crm\config\SecurityConfig.java
 D:\Spring projcts\crm\backend\src\main\java\com\crm\config\WebConfig.java
+D:\Spring projcts\crm\backend\src\main\java\com\crm\config\WebSocketConfig.java
 D:\Spring projcts\crm\backend\src\main\java\com\crm\controller\AddEmployeeController.java
 D:\Spring projcts\crm\backend\src\main\java\com\crm\controller\ChatController.java
 D:\Spring projcts\crm\backend\src\main\java\com\crm\controller\CustomerController.java

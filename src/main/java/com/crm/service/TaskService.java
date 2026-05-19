@@ -3,8 +3,10 @@ package com.crm.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.crm.entity.TaskAsignEntity;
 import com.crm.entity.TaskEntity;
 import com.crm.modal.TaskModal;
+import com.crm.repo.TaskAsignRepo;
 import com.crm.repo.TaskRepo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.ResponseEntity;
@@ -17,14 +19,18 @@ import com.crm.repo.CustomerRepo;
 @Service
 public class TaskService {
     
-    TaskRepo taskRepo;
-    UserRepo userRepo;
-    CustomerRepo customerRepo;
+  private final  TaskRepo taskRepo;
+  private final  UserRepo userRepo;
+  private final  CustomerRepo customerRepo;
+  private final  TaskAsignRepo asignRepo;
+  private final TaskAsignService asignService;
 
-    public TaskService(TaskRepo taskRepo, UserRepo userRepo,CustomerRepo customerRepo) {
+    public TaskService(TaskRepo taskRepo, UserRepo userRepo, CustomerRepo customerRepo, TaskAsignRepo asignRepo, TaskAsignService asignService) {
         this.taskRepo = taskRepo;
         this.userRepo = userRepo;
         this.customerRepo=customerRepo;
+        this.asignRepo = asignRepo;
+        this.asignService = asignService;
     }
 
     public ResponseEntity<?> addTask(TaskModal taskModal, Long customerId){
@@ -65,7 +71,8 @@ CustomerEntity customerEntity=customerRepo.findById(customerId).orElseThrow(() -
 
                     TaskModal modal=new TaskModal();
 
-                    BeanUtils.copyProperties(taskEntity, modal,"customer");
+                    BeanUtils.copyProperties(taskEntity, modal);
+                    modal.setStatus(taskEntity.getStatus());
 
 
             if(taskEntity.getCustomerEntity()!=null){
@@ -93,7 +100,7 @@ CustomerEntity customerEntity=customerRepo.findById(customerId).orElseThrow(() -
 
             TaskModal modal=new TaskModal();
 
-            BeanUtils.copyProperties(entity, modal,"customer_id");
+            BeanUtils.copyProperties(entity, modal);
             modal.setCustomer_id(entity.getCustomerEntity().getId());
             modal.setStatus(entity.getStatus());
             taskModals.add(modal);

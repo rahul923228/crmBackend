@@ -10,8 +10,8 @@ public class FileConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/uploads/**")
-                .addResourceLocations("file:uploads/");
+        registry.addResourceHandler("/files/**")
+                .addResourceLocations("file:///D:/Spring projcts/crm/backend/uploads/");
     }
 }
 

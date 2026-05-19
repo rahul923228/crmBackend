@@ -49,7 +49,7 @@ public class TicketService {
         ticketEntity.setCustomerName(customerEntity.getCustomerName());
         ticketEntity.setProjectName(taskEntity.getName());
         ticketEntity.setTitle(modal.getTitle());
-
+         ticketEntity.setStatus("OPEN");
         ticketEntity.setCustomer(customerEntity);
         ticketEntity.setProject(taskEntity);
         ticketRepo.save(ticketEntity);

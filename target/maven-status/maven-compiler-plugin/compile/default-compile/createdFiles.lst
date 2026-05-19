@@ -41,6 +41,7 @@ com\crm\entity\UserEntity.class
 com\crm\controller\EmpBasicController.class
 com\crm\entity\PasswordEntity.class
 com\crm\User\PasswordConfig.class
+com\crm\config\WebSocketConfig.class
 com\crm\service\ChatService.class
 com\crm\entity\TicketEntity.class
 com\crm\service\CustomerService.class
